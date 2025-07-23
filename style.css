@@ -1,0 +1,19 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background: pink; /* changed from #111 */
+    color: #eee;
+}
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.planet-card {
+    background-color: #222;
+    border: 1px solid #444;
+    margin: 10px;
+    padding: 15px;
+    width: 200px;
+    border-radius: 10px;
+}
