@@ -34,7 +34,5 @@ jobs:
     - name: Restart Web Server on EC2 target
       run: |
         ssh -i private_key.pem -o StrictHostKeyChecking=no \
-          ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} \
-          "systemctl daemon-reload" \
-          "sudo systemctl status apache2" \
-          "sudo systemctl restart apache2"
+        ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} \
+        "sudo systemctl daemon-reload && sudo systemctl status apache2 && sudo systemctl restart apache2"
