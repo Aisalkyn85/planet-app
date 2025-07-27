@@ -3,22 +3,29 @@ name: Deploy to planet-app on ec2
 on:
   push:
     branches:
-      - main  # adjust if needed
+      - main
 
 jobs:
   deploy:
-    runs-on: self-hosted
+    runs-on: self-hosted  # this is your deployment EC2 runner
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
+
     - name: Setup SSH key
       run: |
         echo "${{ secrets.EC2_SSH_KEY }}" > private_key.pem
         chmod 600 private_key.pem
-    - name: Deploy files to EC2
-      run: |
-        scp -i private_key.pem -o StrictHostKeyChecking=no index.php planet.php style.css ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:${{ secrets.EC2_PATH }}
-    - name: Restart Web Server (Optional)
-      run: |
-        ssh -i private_key.pem -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "sudo systemctl restart apache2 || sudo systemctl restart nginx"
 
+    - name: Deploy files to EC2 target
+      run: |
+        scp -i private_key.pem -o StrictHostKeyChecking=no \
+          index.php planet.php style.css \
+          ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:${{ secrets.EC2_PATH }}
+
+    - name: Restart Web Server on EC2 target
+      run: |
+        ssh -i private_key.pem -o StrictHostKeyChecking=no \
+          ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} \
+          "sudo systemctl restart apache2 || sudo systemctl restart nginx"
