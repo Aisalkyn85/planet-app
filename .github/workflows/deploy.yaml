@@ -20,7 +20,7 @@ jobs:
 
     - name: Deploy files to EC2 target
       run: |
-        scp -i private_key.pem -o StrictHostKeyChecking=no \
+        sudo scp -i private_key.pem -o StrictHostKeyChecking=no \
           index.php planet.php style.css \
           ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:${{ secrets.EC2_PATH }}
 
