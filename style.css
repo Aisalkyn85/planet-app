@@ -1,14 +1,16 @@
 body {
     font-family: Arial, sans-serif;
     text-align: center;
-    background: pink; /* changed from #111 */
+    background: green; /* changed from pink */
     color: #eee;
 }
+
 .container {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
 }
+
 .planet-card {
     background-color: #222;
     border: 1px solid #444;
