@@ -1,7 +1,7 @@
 body {
     font-family: Arial, sans-serif;
     text-align: center;
-    background: green; /* changed from pink */
+    background: skyblue; /* changed from pink or green */
     color: #eee;
 }
 
@@ -19,3 +19,4 @@ body {
     width: 200px;
     border-radius: 10px;
 }
+
