@@ -8,7 +8,7 @@ include 'planets.php';
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Planets of the Solar System</h1>
+    <h1>Planets of the Solar System in the world</h1>
     <div class="container">
         <?php foreach ($planets as $planet): ?>
             <div class="planet-card">
