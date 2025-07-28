@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: planet-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: planet-app
+  template:
+    metadata:
+      labels:
+        app: planet-app
+    spec:
+      containers:
+      - name: planet-app
+        image: <ECR_IMAGE_URI>  # replaced in GitHub Actions
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: planet-app-service
+spec:
+  selector:
+    app: planet-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: LoadBalancer
