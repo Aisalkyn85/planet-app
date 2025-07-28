@@ -1,7 +1,7 @@
 body {
     font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     text-align: center;
-    background: linear-gradient(to right, #fbc2eb, #a6c1ee); /* soft pink-purple gradient */
+    background: green(to right, #fbc2eb, #a6c1ee); /* soft pink-purple gradient */
     color: #222;
     margin: 0;
     padding: 0;
