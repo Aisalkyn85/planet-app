@@ -1,4 +1,4 @@
-name: Deploy to Amazon EKS
+name: Update Deployment Manifests
 
 on:
   push:
@@ -7,15 +7,14 @@ on:
 
 env:
   AWS_REGION: ${{ vars.AWS_REGION }}
-  EKS_CLUSTER_NAME: ${{ secrets.EKS_CLUSTER_NAME }}
   ECR_REPOSITORY: ${{ vars.ECR_REPOSITORY }}
 
 jobs:
-  deploy:
+  build-and-update:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
+    - name: Checkout repo
       uses: actions/checkout@v3
 
     - name: Read semantic version
@@ -33,7 +32,7 @@ jobs:
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
 
-    - name: Build, tag, and push image to ECR
+    - name: Build and push Docker image
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
       run: |
@@ -42,11 +41,14 @@ jobs:
         docker push $IMAGE_URI
         echo "IMAGE_URI=$IMAGE_URI" >> $GITHUB_ENV
 
-    - name: Update kubeconfig for EKS
+    - name: Update deployment manifest with new image
       run: |
-        aws eks update-kubeconfig --name $EKS_CLUSTER_NAME --region $AWS_REGION
+        sed -i "s|image: .*|image: ${IMAGE_URI}|" k8s/deployment.yaml
 
-    - name: Deploy to EKS
+    - name: Commit and push manifest changes
       run: |
-        sed "s|<ECR_IMAGE_URI>|$IMAGE_URI|g" k8s/deployment.yaml | kubectl apply -f -
-        kubectl rollout status deployment/planet-app
+        git config user.name "GitHub Actions"
+        git config user.email "actions@github.com"
+        git add k8s/deployment.yaml
+        git commit -m "Update image to ${VERSION}"
+        git push
