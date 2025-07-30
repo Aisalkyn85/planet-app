@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
       - name: planet-app
-        image: <ECR_IMAGE_URI>  # replaced in GitHub Actions
+        image: 122610524382.dkr.ecr.us-east-2.amazonaws.com/planet-app:1.0.5
         ports:
         - containerPort: 80
 ---
