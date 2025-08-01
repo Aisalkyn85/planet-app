@@ -1,8 +1,8 @@
 body {
     font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     text-align: center;
-    background: linear-gradient(to right, #a8e063, #56ab2f); /* soft green gradient */
-    color: #222;
+    background: linear-gradient(to right, #89f7fe, #66a6ff); /* soft blue gradient */
+    color: #1a1a2e;
     margin: 0;
     padding: 0;
 }
@@ -16,8 +16,8 @@ body {
 }
 
 .planet-card {
-    background-color: #fff0f5; /* lavender blush */
-    border: 2px solid #f7c5cc; /* soft coral border */
+    background-color: #f0f4ff; /* light periwinkle */
+    border: 2px solid #d0caff; /* soft purple border */
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
     padding: 24px;
     width: 240px;
@@ -29,6 +29,6 @@ body {
 .planet-card:hover {
     transform: translateY(-8px);
     box-shadow: 0 10px 24px rgba(0, 0, 0, 0.2);
-    background-color: #fff5f8;
-    border-color: #f08080; /* light coral on hover */
+    background-color: #e6f0ff; /* lighter hover effect */
+    border-color: #a18aff; /* deeper purple on hover */
 }
