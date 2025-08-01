@@ -3,9 +3,6 @@ name: Update Deployment Manifests
 on:
   push:
     branches:
-      - '**'
-  pull_request:
-    branches:
       - main
 
 env:
@@ -19,45 +16,44 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repo
-      uses: actions/checkout@v3
+      - name: Checkout repo
+        uses: actions/checkout@v3
 
-    - name: Read semantic version
-      id: get-version
-      run: echo "VERSION=$(cat VERSION)" >> $GITHUB_ENV
+      - name: Read semantic version
+        id: get-version
+        run: echo "VERSION=$(cat VERSION)" >> $GITHUB_ENV
 
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v2
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ env.AWS_REGION }}
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
 
-    - name: Login to Amazon ECR
-      id: login-ecr
-      uses: aws-actions/amazon-ecr-login@v1
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
 
-    - name: Build and push Docker image
-      env:
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-      run: |
-        IMAGE_URI=${ECR_REGISTRY}/${ECR_REPOSITORY}:${VERSION}
-        docker build -t $IMAGE_URI .
-        docker push $IMAGE_URI
-        echo "IMAGE_URI=$IMAGE_URI" >> $GITHUB_ENV
+      - name: Build and push Docker image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: |
+          IMAGE_URI=${ECR_REGISTRY}/${ECR_REPOSITORY}:${VERSION}
+          docker build -t $IMAGE_URI .
+          docker push $IMAGE_URI
+          echo "IMAGE_URI=$IMAGE_URI" >> $GITHUB_ENV
 
-    - name: Update deployment manifest with new image
-      run: |
-        sed -i "s|image: .*|image: ${IMAGE_URI}|" k8s/deployment.yaml
+      - name: Update deployment manifest with new image
+        run: |
+          sed -i "s|image: .*|image: ${IMAGE_URI}|" k8s/deployment.yaml
 
-    - name: Commit and push manifest changes
-      env:
-        GH_PAT: ${{ secrets.GH_PAT }}
-      run: |
-        if: github.ref == 'refs/heads/main'
-        git config --global user.name "Aisalkyn85"
-        git config --global user.email "aisalkynaidarova8@gmail.com"
-        git remote  set-url origin https://x-access-token:${GH_PAT}@github.com/${{ github.repository }}.git
-        git add k8s/deployment.yaml
-        git commit -m "Update image to ${VERSION}"
-        git push
+      - name: Commit and push manifest changes
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
+        run: |
+          git config --global user.name "Aisalkyn85"
+          git config --global user.email "aisalkynaidarova8@gmail.com"
+          git remote set-url origin https://x-access-token:${GH_PAT}@github.com/${{ github.repository }}.git
+          git add k8s/deployment.yaml
+          git commit -m "Update image to ${VERSION} [skip ci]"
+          git push
